@@ -1,0 +1,301 @@
+Sub Prc_QR_all()
+
+Dim Z_Img As String
+Dim Z_SH As Shape
+Z_Row = 10
+Dim new_qr As Integer
+   
+new_qr = 0
+
+Do While Cells(Z_Row, 2) <> ""
+
+    Set Z_SH = ActiveSheet.Shapes.AddShape(msoShapeRectangle, 10, 10, 10, 10)
+    Z_SH.Top = 152 + new_qr
+    Z_SH.Left = 195
+    Z_SH.Height = 61
+    Z_SH.Width = 138
+    
+            With Z_SH
+            .Left = .TopLeftCell.Left
+            .Top = .TopLeftCell.Top
+            .Height = .TopLeftCell.Height
+            .Width = .TopLeftCell.Width
+        End With
+    
+    Z_Code = Cells(Z_Row, 2).Value
+    
+    Z_Img = "http://api.qrserver.com/v1/create-qr-code/?data=" & Z_Code & "&size=250x250"
+
+    Z_SH.Fill.UserPicture (Z_Img)
+
+    
+new_qr = new_qr + 62
+Z_Row = Z_Row + 1
+Loop
+MsgBox "Done printing QR codes"
+
+End Sub
+
+Sub Prc_QR_color_cond()
+
+Dim Z_Img As String
+Dim Z_SH As Shape
+Z_Row = 10
+Dim new_qr As Integer
+
+new_qr = 0
+
+Do While Cells(Z_Row, 2) <> ""
+
+If Cells(Z_Row, 2).Interior.Color = 49407 Then
+    Set Z_SH = ActiveSheet.Shapes.AddShape(msoShapeRectangle, 10, 10, 10, 10)
+    Z_SH.Top = 152 + new_qr
+    Z_SH.Left = 195
+    Z_SH.Height = 61
+    Z_SH.Width = 138
+    
+        With Z_SH
+            .Left = .TopLeftCell.Left
+            .Top = .TopLeftCell.Top
+            .Height = .TopLeftCell.Height
+            .Width = .TopLeftCell.Width
+        End With
+    
+    Z_Code = Cells(Z_Row, 2).Value
+    
+    Z_Img = "http://api.qrserver.com/v1/create-qr-code/?data=" & Z_Code & "&size=250x250"
+
+    Z_SH.Fill.UserPicture (Z_Img)
+End If
+    
+new_qr = new_qr + 62
+Z_Row = Z_Row + 1
+Loop
+MsgBox "Done printing QR codes"
+
+End Sub
+
+Sub Prc_Delete_QR()
+Dim shp As Shape
+
+For Each shp In ActiveSheet.Shapes
+    If shp.TopLeftCell.Column = 4 Then shp.Delete
+Next shp
+
+MsgBox "QR codes deleted"
+End Sub
+
+Sub Prc_X_col()
+
+Dim Z_Col As Integer
+Dim Z_min As Integer
+Dim Z_max As Integer
+Dim Z_color_within As Long
+Dim Z_color_out As Long
+
+Z_color_within = Range("K1").Interior.Color
+Z_color_out = Range("M1").Interior.Color
+
+Z_Col = 3
+Z_min = Range("E1").Value
+Z_max = Range("E2").Value
+
+Do While Cells(6, Z_Col).Value <> ""
+    If Cells(6, Z_Col).Value > Z_min And Cells(6, Z_Col).Value < Z_max Then
+        Cells(6, Z_Col).Interior.Color = Z_color_within
+        Cells(7, Z_Col).Value = "x"
+    Else
+        Cells(6, Z_Col).Interior.Color = Z_color_out
+    
+    End If
+    
+    Z_Col = Z_Col + 1
+Loop
+
+MsgBox "Done"
+
+End Sub
+
+Sub Prc_del_col_x()
+
+For Z_Col = 3 To 19
+
+    Cells(6, Z_Col).Interior.Color = xlNone
+    Cells(7, Z_Col).Value = ""
+Next Z_Col
+
+MsgBox "All marks have been deleted"
+   
+End Sub
+
+Sub Prc_transpose()
+Dim Z_Lig As Byte
+Dim Z_Row As Integer
+Dim Z_Col As Integer
+
+Range("I8").Select 'start point of output
+Selection.CurrentRegion.Select
+Selection.Clear
+
+z_row_it = 8
+z_col_it = 2  '1 less than start point
+
+Z_Row = 7  '1 less than start point
+Z_Col = 9
+
+
+Do While Cells(z_row_it, 3).Value <> ""
+    z_col_it = z_col_it + 1
+    
+    If Cells(z_row_it, z_col_it).Value <> "" Then
+        Z_Row = Z_Row + 1
+        
+    Else
+        z_col_it = 2
+        z_row_it = z_row_it + 1
+        Z_Col = Z_Col + 1
+        Z_Row = 7
+    End If
+
+    Cells(Z_Row, Z_Col).Value = Cells(z_row_it, z_col_it).Value
+    
+Loop
+
+Range("I8").Select
+Selection.CurrentRegion.Select
+Selection.Interior.Color = 65535
+
+MsgBox "Bye"
+
+End Sub
+
+Sub Prc_clear()
+
+Range("I8").Select
+Selection.CurrentRegion.Select
+Selection.Clear
+
+MsgBox "Contents cleared"
+End Sub
+
+Sub Prc_transpose_dyn()
+Dim Z_Lig As Byte
+Dim Z_Row As Integer
+Dim Z_Col As Integer
+
+
+Range("C8").Select
+Selection.CurrentRegion.Select
+
+With Selection
+    z_row_it = .Row
+    z_col_it = .Column - 1  '1 less than start point
+
+End With
+
+
+
+Z_Row = 7  '1 less than start point
+Z_Col = 9
+
+Do While Cells(z_row_it, 3).Value <> ""
+    z_col_it = z_col_it + 1
+    
+    If Cells(z_row_it, z_col_it).Value <> "" Then
+        Z_Row = Z_Row + 1
+        
+    Else
+        z_col_it = 2
+        z_row_it = z_row_it + 1
+        Z_Col = Z_Col + 1
+        Z_Row = 7
+    End If
+
+    Cells(Z_Row, Z_Col).Value = Cells(z_row_it, z_col_it).Value
+    
+Loop
+
+Range("I8").Select
+Selection.CurrentRegion.Select
+Selection.Interior.Color = 65535
+
+MsgBox "Bye"
+
+End Sub
+
+Sub Prc_txt()
+Dim Z_Row As Integer
+Dim Z_TxtToFind As String
+Dim Z_TxtToScan As String
+Dim Z_Rowtxt As Integer
+Dim Z_Col As Integer
+
+Z_Row = 9
+
+Do While Cells(Z_Row, 5).Value <> ""
+
+    Z_TxtToFind = Cells(Z_Row, 5).Value
+    Z_Rowtxt = 27
+    Z_Col = 6
+        Do While Cells(Z_Rowtxt, 3).Value <> ""
+            Z_TxtToScan = Cells(Z_Rowtxt, 3).Value
+            
+                If InStr(1, Z_TxtToScan, Z_TxtToFind) <> 0 Then
+                Cells(Z_Row, Z_Col).Value = Z_Rowtxt
+                Z_Col = Z_Col + 1
+                End If
+        
+        Z_Rowtxt = Z_Rowtxt + 1
+        Loop
+
+
+
+    Z_Row = Z_Row + 1
+Loop
+
+
+MsgBox "Done !"
+End Sub
+
+Sub Prc_clear_txt()
+
+Range("F9:OX13").Select
+Selection.Clear
+
+MsgBox "Contents cleared"
+End Sub
+
+Sub Prc_txt_withinP()
+Dim Z_Row As Integer
+Dim Z_TxtToFind As String
+Dim Z_TxtToScan As String
+Dim Z_Rowtxt As Integer
+Dim Z_Col As Integer
+
+Z_Row = 9
+
+Do While Cells(Z_Row, 5).Value <> ""
+
+    Z_TxtToFind = Cells(Z_Row, 5).Value
+    Z_Rowtxt = 27
+    Z_Col = 6
+        Do While Cells(Z_Rowtxt, 3).Value <> ""
+            Z_TxtToScan = Cells(Z_Rowtxt, 3).Value
+            
+            If Z_Col < 17 Then 'For printing only within P
+                If InStr(1, Z_TxtToScan, Z_TxtToFind) <> 0 Then
+                Cells(Z_Row, Z_Col).Value = Z_Rowtxt
+                Z_Col = Z_Col + 1
+                End If
+            End If
+        Z_Rowtxt = Z_Rowtxt + 1
+        Loop
+
+
+
+    Z_Row = Z_Row + 1
+Loop
+
+
+MsgBox "Done !"
+End Sub
